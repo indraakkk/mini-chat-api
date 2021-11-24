@@ -16,6 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Api'], function () {
     Route::group(['prefix' => 'v1'], function() {
-
+        Route::post('/login', 'ChatController@loginOrCreate');
     });
 });

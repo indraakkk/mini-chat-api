@@ -19,4 +19,14 @@ class User extends Model
     {
         return $this->all();
     }
+
+    public function insert($arr)
+    {
+        return $this->create($arr);
+    }
+
+    public function login($arr)
+    {
+        return $this->where($arr)->first();
+    }
 }
