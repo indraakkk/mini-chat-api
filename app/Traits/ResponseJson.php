@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-trait JsonResponse {
+trait ResponseJson {
 
     public function responseWithCondition($data, $msg, $code)
     {
