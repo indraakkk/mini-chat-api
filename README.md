@@ -1,6 +1,6 @@
 # mini-chat-api
 
-This mini-chat-api project created on top of Laravel 8.0 store data to MySql
+This mini-chat-api project created on top of Laravel 8.0 and MySQL
 
 ##### Login or create new user
 
