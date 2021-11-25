@@ -17,7 +17,7 @@ class Room extends Model
 
     public function get()
     {
-        return $this->all();
+        return $this->get();
     }
 
     public function user()
@@ -33,5 +33,10 @@ class Room extends Model
     public function userRooms($uuid)
     {
         return $this->where('user_uuid', $uuid)->get();
+    }
+
+    public function findRoom($filter)
+    {
+        return $this->where($filter)->first();
     }
 }

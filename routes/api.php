@@ -18,5 +18,8 @@ Route::group(['namespace' => 'Api'], function () {
     Route::group(['prefix' => 'v1'], function() {
         Route::post('/login', 'ChatController@loginOrCreate');
         Route::post('/create', 'ChatController@createChat');
+        Route::post('/send', 'ChatController@sendChat');
+        Route::get('/list/{uuid}', 'ChatController@listUserRooms');
+        Route::post('/chats', 'ChatController@listUserChat');
     });
 });

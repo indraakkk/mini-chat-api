@@ -107,26 +107,100 @@ class ChatController extends Controller
         }
     }
 
-    public function sendChatProcess($request, $data)
+    public function sendChatProcess($request)
     {
         DB::beginTransaction();
 
         try {
-            // find  room
-            $room = $this->room->findRoom($request->to_user_uuid, $room_id);
-            $update = [
-                'unread' => $room->unread + 1
+            // find  room and update receive unread count
+            $filter = [
+                'user_uuid' => $request->to_user_uuid,
+                'room_id'   => $request->room_id
             ];
-            if ($update) {
-                $this->chat->sendChat($data);
+            $updateUnreads = $this->updateUnreads($filter, 1);
+
+            $data = [
+                'message' => $request->message,
+                'room_id' => $request->room_id,
+                'user_uuid' => $request->user_uuid
+            ];
+
+            $send = $this->chat->storeChat($data);
+
+
+            if ($send) {
+                $filter = [
+                    'user_uuid' => $request->user_uuid,
+                    'room_id'   => $request->room_id
+                ];
+
+                $updateUnreads = $this->updateUnreads($filter, 0);
+                DB::commit();
+
+                return $this->chat->getByRoomId($request->room_id);
             }
-
-            DB::commit();
-
-            return true;
 
         } catch (\Throwable $th) {
             DB::rollback();
+            throw $th;
+        }
+    }
+
+    public function sendChat(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'to_user_uuid' => 'required',
+            'user_uuid' => 'required',
+            'room_id'   => 'required',
+            'message'   => 'required'
+        ]);
+
+        if($validator->fails())
+            throw new ValidationException($validator);
+
+        $send = $this->sendChatProcess($request);
+
+        return $this->responseWithCondition($send, 'success', 200);
+    }
+
+    public function updateUnreads($filter, $state)
+    {
+        $room = $this->room->findRoom($filter);
+
+        if ($state) {
+            $room->unread = $room->unread + 1;
+        } else {
+            $room->unread = $state;
+        }
+        $room->save();
+
+        return true;
+    }
+
+    public function listUserRooms($uuid)
+    {
+        try {
+            $data = $this->table->getByUuid($uuid);
+            return $this->responseWithCondition($data, 'success', 200);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function listUserChat(Request $request)
+    {
+        try {
+            $filter = [
+                'user_uuid' => $request->user_uuid,
+                'room_id'   => $request->room_id
+            ];
+
+            $updateUnreads = $this->updateUnreads($filter, 0);
+
+            $data = $this->chat->getByRoomId($request->room_id);
+
+            return $this->responseWithCondition($data, 'success', 200);
+        } catch (\Throwable $th) {
             throw $th;
         }
     }

@@ -19,4 +19,9 @@ class Chat extends Model
     {
         return $this->where('room_id', $id)->get();
     }
+
+    public function storeChat($arr)
+    {
+        return $this->create($arr);
+    }
 }
