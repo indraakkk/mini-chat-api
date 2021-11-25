@@ -264,3 +264,8 @@ This mini-chat-api project created on top of Laravel 8.0 and MySQL
 | POST     | api/v1/send         |      | App\Http\Controllers\Api\ChatController@sendChat           |
 +----------+---------------------+------+------------------------------------------------------------+
 ```
+
+
+##### DB schema tinkering
+
+![alt text](Screenshot_2021-11-22_203604.png "DB_design_tinkering")
