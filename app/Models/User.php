@@ -17,7 +17,12 @@ class User extends Model
 
     public function get()
     {
-        return $this->all();
+        return $this->with('rooms')->get();
+    }
+
+    public function getByUuid($uuid)
+    {
+        return $this->where('uuid', $uuid)->with('rooms')->get();
     }
 
     public function insert($arr)
@@ -28,5 +33,10 @@ class User extends Model
     public function login($arr)
     {
         return $this->where($arr)->first();
+    }
+
+    public function rooms()
+    {
+        return $this->hasMany(Room::class, 'user_uuid', 'uuid');
     }
 }
