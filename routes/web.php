@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return 'laravel ' . env('APP_NAME');
+Route::group(['namespace' => 'Web'], function(){
+    Route::get('/', 'ChatController@index')->name('index');
 });

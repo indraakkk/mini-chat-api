@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\GenerateUuid;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class User extends Model
 {
-    use GenerateUuid;
+    use GenerateUuid, HasFactory;
 
     protected $table = 'users';
 
